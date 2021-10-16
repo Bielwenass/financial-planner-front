@@ -3,63 +3,57 @@
     <v-app-bar
       app
       color="primary"
-      dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
+      <v-dialog
+        v-if="!isLoggedIn"
+        v-model="isDialogShown"
+        max-width="300px"
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            light
+            v-bind="attrs"
+            v-on="on"
+          >
+            Sign in
+          </v-btn>
+        </template>
+
+        <login-dialog @close="isDialogShown = false" />
+      </v-dialog>
+
+      <span
+        v-else
+        class="white--text text-h6"
+      >
+        Logged in
+      </span>
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <v-container>
+        <router-view />
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import get, { AxiosResponse } from 'axios';
 import { Component, Vue } from 'vue-property-decorator';
 
-import { Monthly } from './types/Monthly';
+import LoginDialog from '@/components/LoginDialog.vue';
 
-@Component
-export default class Root extends Vue {
-  // @Prop() public monthlys!: Array<number>;
+@Component({
+  components: {
+    LoginDialog,
+  },
+})
+export default class Base extends Vue {
+  public isDialogShown = false;
 
-  monthlys: Array<Monthly> = [];
-
-  async created(): Promise<void> {
-    const testResp = await get('https://five-year-plan.herokuapp.com/monthlys/') as AxiosResponse;
-
-    this.monthlys = testResp.data;
-    console.log(this.monthlys);
+  get isLoggedIn(): boolean {
+    return Boolean(this.$store.state.authToken);
   }
 }
+
 </script>
