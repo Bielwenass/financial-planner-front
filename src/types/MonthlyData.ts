@@ -5,4 +5,4 @@ export default interface MonthlyData {
   incomesSum: number
   expensesSum: number
   payments: Array<Payment>
-};
+}

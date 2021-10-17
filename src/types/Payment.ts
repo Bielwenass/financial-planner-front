@@ -4,4 +4,4 @@ export default interface Payment {
   ownerId: number
   start: Date
   end: Date
-};
+}

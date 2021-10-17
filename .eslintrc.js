@@ -20,6 +20,10 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'linebreak-style': 'off',
 
+    // Favor the Typescript semi rule
+    'semi': 'off',
+    '@typescript-eslint/semi': 'error',
+
     // Max 120 symbols per line
     'max-len': ['warn', {
       code: 120,

@@ -5,18 +5,16 @@
     </v-card-title>
 
     <v-card-text>
-      <v-form>
-        <v-text-field
-          v-model="usernameInput"
-          label="Username"
-        />
+      <v-text-field
+        v-model="usernameInput"
+        label="Username"
+      />
 
-        <v-text-field
-          v-model="passwordInput"
-          label="Password"
-          type="password"
-        />
-      </v-form>
+      <v-text-field
+        v-model="passwordInput"
+        label="Password"
+        type="password"
+      />
     </v-card-text>
 
     <v-card-actions>
