@@ -3,7 +3,7 @@
     <v-expansion-panel-header class="">
       <v-row>
         <v-col cols="2">
-          Month name
+          {{ $t(`months.${monthlyData.monthNum}`) }}
         </v-col>
 
         <v-col
@@ -55,6 +55,6 @@ import MonthlyData from '@/types/MonthlyData';
 
 @Component
 export default class Month extends Vue {
-  @Prop() readonly monthlyData: MonthlyData | undefined
+  @Prop() readonly monthlyData: MonthlyData | undefined;
 }
 </script>

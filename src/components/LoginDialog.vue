@@ -1,18 +1,18 @@
 <template>
   <v-card>
     <v-card-title>
-      Sign in
+      {{ $t('auth.signIn') }}
     </v-card-title>
 
     <v-card-text>
       <v-text-field
         v-model="usernameInput"
-        label="Username"
+        :label="$t('auth.username')"
       />
 
       <v-text-field
         v-model="passwordInput"
-        label="Password"
+        :label="$t('auth.password')"
         type="password"
       />
     </v-card-text>
@@ -24,14 +24,14 @@
         text
         @click="$emit('close')"
       >
-        Cancel
+        {{ $t('common.cancel') }}
       </v-btn>
 
       <v-btn
         text
         @click="auth()"
       >
-        Sign in
+        {{ $t('auth.signIn') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -69,6 +69,8 @@ export default class LoginDialog extends Vue {
       this.$store.commit('updateValue', {
         authToken,
       });
+
+      this.$store.dispatch('getPayments');
 
       this.$emit('close');
     }

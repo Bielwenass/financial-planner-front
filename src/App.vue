@@ -15,7 +15,7 @@
             v-bind="attrs"
             v-on="on"
           >
-            Sign in
+            {{ $t('auth.signIn') }}
           </v-btn>
         </template>
 
@@ -26,7 +26,7 @@
         v-else
         class="white--text text-h6"
       >
-        Logged in
+        {{ $t('auth.signedIn') }}
       </span>
     </v-app-bar>
 
