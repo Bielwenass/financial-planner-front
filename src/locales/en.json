@@ -12,6 +12,16 @@
     "income": "Income",
     "expenses": "Expenses"
   },
+  "payment": {
+    "name": "Name",
+    "amount": "Amount",
+    "isMonthly": "Monthly",
+    "date": "Date",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "add": "Add payment",
+    "addAction": "Add"
+  },
   "months": {
     "1": "January",
     "2": "February",
@@ -25,5 +35,9 @@
     "10": "October",
     "11": "November",
     "12": "December"
+  },
+  "errors": {
+    "dateRule": "Date must be valid (YYYY-MM-DD)",
+    "requiredRule": "This field is required"
   }
 }

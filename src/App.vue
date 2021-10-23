@@ -6,7 +6,7 @@
     >
       <v-dialog
         v-if="!isLoggedIn"
-        v-model="isDialogShown"
+        v-model="isLoginDialogShown"
         max-width="300px"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -19,7 +19,7 @@
           </v-btn>
         </template>
 
-        <login-dialog @close="isDialogShown = false" />
+        <login-dialog @close="isLoginDialogShown = false" />
       </v-dialog>
 
       <span
@@ -49,7 +49,7 @@ import LoginDialog from '@/components/LoginDialog.vue';
   },
 })
 export default class Base extends Vue {
-  public isDialogShown = false;
+  public isLoginDialogShown = false;
 
   get isLoggedIn(): boolean {
     return Boolean(this.$store.state.authToken);
