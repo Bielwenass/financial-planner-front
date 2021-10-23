@@ -85,6 +85,11 @@ export default class EditPaymentDialog extends Vue {
   requiredRule = requiredRule;
 
   async addPayment(): Promise<void> {
+    // If the payment isn't monthly, end date is the same as start date
+    if (!this.newPayment.isMonthly) {
+      this.newPayment.end = this.newPayment.start;
+    }
+
     const addPaymentResponse = await axios.post(
       'https://five-year-plan.herokuapp.com/payments/',
       this.newPayment,
