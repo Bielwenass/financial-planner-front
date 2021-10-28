@@ -3,28 +3,23 @@
     class="my-6"
     justify="center"
   >
-    <v-dialog
+    <v-btn
       v-show="this.$store.state.authToken"
-      v-model="isPaymentDialogShown"
-      max-width="500px"
+      color="primary"
+      large
+      class="mb-6"
+      @click="isPaymentDialogShown = true"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="primary"
-          large
-          class="mb-6"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon left>
-            mdi-plus
-          </v-icon>
-          {{ $t('payment.add') }}
-        </v-btn>
-      </template>
+      <v-icon left>
+        mdi-plus
+      </v-icon>
+      {{ $t('payment.add') }}
+    </v-btn>
 
-      <edit-payment-dialog @close="isPaymentDialogShown = false" />
-    </v-dialog>
+    <edit-payment-dialog
+      :is-displayed.sync="isPaymentDialogShown"
+      action-type="add"
+    />
 
     <v-fade-transition>
       <v-expansion-panels

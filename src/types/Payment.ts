@@ -1,7 +1,9 @@
 export default interface Payment {
-  amount: number
+  id: number
   name: string
-  ownerId: number
-  start: Date
-  end: Date
+  amount: number
+  ownerId?: number
+  start: string
+  end: string
+  isMonthly?: boolean
 }

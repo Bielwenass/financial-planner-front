@@ -10,7 +10,8 @@
   },
   "home": {
     "income": "Income",
-    "expenses": "Expenses"
+    "expenses": "Expenses",
+    "actions": "Actions"
   },
   "payment": {
     "name": "Name",
@@ -20,7 +21,9 @@
     "startDate": "Start date",
     "endDate": "End date",
     "add": "Add payment",
-    "addAction": "Add"
+    "addAction": "Add",
+    "edit": "Edit payment",
+    "editAction": "Save"
   },
   "months": {
     "1": "January",

@@ -40,9 +40,27 @@
           <v-data-table
             :headers="paymentHeaders"
             :items="income"
+            sort-by="amount"
+            :sort-desc="true"
             disable-pagination
             hide-default-footer
-          />
+          >
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon
+                small
+                class="mr-2"
+                @click="editPayment(item)"
+              >
+                mdi-pencil
+              </v-icon>
+              <v-icon
+                small
+                @click="deletePayment(item)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
         </v-col>
 
         <v-col cols="6">
@@ -53,11 +71,36 @@
           <v-data-table
             :headers="paymentHeaders"
             :items="expenses"
+            sort-by="amount"
+            :sort-desc="false"
             disable-pagination
             hide-default-footer
-          />
+          >
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon
+                small
+                class="mr-2"
+                @click="editPayment(item)"
+              >
+                mdi-pencil
+              </v-icon>
+              <v-icon
+                small
+                @click="deletePayment(item)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
+          </v-data-table>
         </v-col>
       </v-row>
+
+      <edit-payment-dialog
+        v-if="isPaymentDialogShown"
+        :is-displayed.sync="isPaymentDialogShown"
+        action-type="edit"
+        :payment-data-initial="editedPayment"
+      />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -69,10 +112,16 @@ import {
   Vue,
 } from 'vue-property-decorator';
 
+import EditPaymentDialog from '@/components/EditPaymentDialog.vue';
+
 import MonthlyData from '@/types/MonthlyData';
 import Payment from '@/types/Payment';
 
-@Component
+@Component({
+  components: {
+    EditPaymentDialog,
+  },
+})
 export default class Month extends Vue {
   @Prop() readonly monthlyData!: MonthlyData;
 
@@ -83,8 +132,16 @@ export default class Month extends Vue {
     }, {
       text: this.$t('payment.amount'),
       value: 'amount',
+    }, {
+      text: this.$t('home.actions'),
+      value: 'actions',
+      sortable: false,
     },
   ];
+
+  private isPaymentDialogShown = false;
+
+  private editedPayment = {} as Payment;
 
   get income(): Array<Payment> {
     return this.monthlyData.payments.filter((e) => e.amount >= 0);
@@ -92,6 +149,15 @@ export default class Month extends Vue {
 
   get expenses(): Array<Payment> {
     return this.monthlyData.payments.filter((e) => e.amount < 0);
+  }
+
+  editPayment(payment: Payment): void {
+    this.editedPayment = payment;
+    this.isPaymentDialogShown = true;
+  }
+
+  deletePayment(payment: Payment): void {
+    this.$store.dispatch('deletePayment', payment.id);
   }
 }
 </script>
