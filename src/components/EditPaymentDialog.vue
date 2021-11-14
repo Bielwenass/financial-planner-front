@@ -24,6 +24,28 @@
           type="number"
         />
 
+        <v-select
+          v-model="paymentData.categoryId"
+          :items="categories"
+          item-text="name"
+          item-value="id"
+          :label="$t('category.selectLabel')"
+        >
+          <template v-slot:item="{ item }">
+            <div>
+              <v-icon
+                :color="item.color"
+                size="20px"
+                v-text="'mdi-circle'"
+              />
+
+              <span class="ml-1 category-select-text">
+                {{ item.name }}
+              </span>
+            </div>
+          </template>
+        </v-select>
+
         <v-checkbox
           v-model="paymentData.isMonthly"
           :label="$t('payment.isMonthly')"
@@ -46,6 +68,15 @@
       </v-card-text>
 
       <v-card-actions>
+        <v-btn
+          v-if="actionType === 'edit'"
+          color="red"
+          text
+          @click="deletePayment()"
+        >
+          {{ $t('common.delete') }}
+        </v-btn>
+
         <v-spacer />
 
         <v-btn
@@ -77,6 +108,7 @@ import {
 
 import DatePickerInput from '@/components/DatePickerInput.vue';
 
+import Category from '@/types/Category';
 import Payment from '@/types/Payment';
 
 import requiredRule from '@/utils/rules/requiredRule';
@@ -97,6 +129,7 @@ export default class EditPaymentDialog extends Vue {
     id: 0,
     name: '',
     amount: null as unknown as number,
+    categoryId: null,
     isMonthly: false,
     start: new Date().toISOString().split('T')[0],
     end: new Date().toISOString().split('T')[0],
@@ -107,6 +140,10 @@ export default class EditPaymentDialog extends Vue {
   private isLoading = false;
 
   requiredRule = requiredRule;
+
+  get categories(): Array<Category> {
+    return [...this.$store.state.categories.values()];
+  }
 
   get actionCardTitleString(): string {
     switch (this.actionType) {
@@ -165,8 +202,27 @@ export default class EditPaymentDialog extends Vue {
     }
   }
 
+  async deletePayment(): Promise<void> {
+    this.isLoading = true;
+
+    const success = await this.$store.dispatch('deletePayment', this.paymentData.id);
+
+    if (success) {
+      this.closeDialog();
+    } else {
+      this.isLoading = false;
+    }
+  }
+
   closeDialog(): void {
     this.$emit('update:isDisplayed', false);
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+  .category-select-text {
+    vertical-align: text-top;
+  }
+</style>

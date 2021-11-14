@@ -6,12 +6,12 @@
     "password": "Пароль"
   },
   "common": {
-    "cancel": "Отменить"
+    "cancel": "Отменить",
+    "delete": "Delete"
   },
   "home": {
     "income": "Доходы",
-    "expenses": "Расходы",
-    "actions": "Действия"
+    "expenses": "Расходы"
   },
   "payment": {
     "name": "Название",
@@ -24,6 +24,18 @@
     "addAction": "Добавить",
     "edit": "Редактирование платежа",
     "editAction": "Сохранить"
+  },
+  "category": {
+    "name": "Название",
+    "add": "Новая категория",
+    "addAction": "Добавить",
+    "edit": "Редактирование категории",
+    "editAction": "Сохранить",
+    "selectLabel": "Категория"
+  },
+  "nav": {
+    "payments": "Платежи",
+    "categories": "Категории"
   },
   "months": {
     "1": "Январь",

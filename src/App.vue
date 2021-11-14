@@ -2,32 +2,66 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
     >
-      <v-dialog
-        v-if="!isLoggedIn"
-        v-model="isLoginDialogShown"
-        max-width="300px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            light
-            v-bind="attrs"
-            v-on="on"
+      <v-container>
+        <v-row>
+          <router-link
+            v-slot="{ navigate }"
+            custom
+            :to="{ name: 'Home' }"
           >
-            {{ $t('auth.signIn') }}
-          </v-btn>
-        </template>
+            <v-btn
+              text
+              :disabled="!isLoggedIn"
+              @click="navigate"
+            >
+              {{ $t('nav.payments') }}
+            </v-btn>
+          </router-link>
 
-        <login-dialog @close="isLoginDialogShown = false" />
-      </v-dialog>
+          <router-link
+            v-slot="{ navigate }"
+            custom
+            :to="{ name: 'Categories' }"
+            class="ml-4"
+          >
+            <v-btn
+              text
+              :disabled="!isLoggedIn"
+              @click="navigate"
+            >
+              {{ $t('nav.categories') }}
+            </v-btn>
+          </router-link>
 
-      <span
-        v-else
-        class="white--text text-h6"
-      >
-        {{ $t('auth.signedIn') }}
-      </span>
+          <v-spacer />
+
+          <div
+            v-if="isLoggedIn"
+            class="user-email-display text--secondary"
+          >
+            {{ $store.state.userEmail || $t('auth.signedIn') }}
+          </div>
+
+          <v-dialog
+            v-else
+            v-model="isLoginDialogShown"
+            max-width="300px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
+              >
+                {{ $t('auth.signIn') }}
+              </v-btn>
+            </template>
+
+            <login-dialog @close="isLoginDialogShown = false" />
+          </v-dialog>
+        </v-row>
+      </v-container>
     </v-app-bar>
 
     <v-main>
@@ -54,6 +88,19 @@ export default class Base extends Vue {
   get isLoggedIn(): boolean {
     return Boolean(this.$store.state.authToken);
   }
+
+  created(): void {
+    if (this.isLoggedIn) {
+      this.$store.dispatch('getCategories');
+    }
+  }
 }
 
 </script>
+
+<style lang="scss" scoped>
+
+.user-email-display {
+  line-height: 36px;
+}
+</style>

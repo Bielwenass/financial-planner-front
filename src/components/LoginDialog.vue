@@ -70,7 +70,9 @@ export default class LoginDialog extends Vue {
         authToken,
       });
 
+      this.$store.dispatch('getUserData');
       this.$store.dispatch('getPayments');
+      this.$store.dispatch('getCategories');
 
       this.$emit('close');
     }

@@ -6,12 +6,12 @@
     "password": "Password"
   },
   "common": {
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "home": {
     "income": "Income",
-    "expenses": "Expenses",
-    "actions": "Actions"
+    "expenses": "Expenses"
   },
   "payment": {
     "name": "Name",
@@ -24,6 +24,18 @@
     "addAction": "Add",
     "edit": "Edit payment",
     "editAction": "Save"
+  },
+  "category": {
+    "name": "Name",
+    "add": "Add category",
+    "addAction": "Add",
+    "edit": "Edit category",
+    "editAction": "Save",
+    "selectLabel": "Category"
+  },
+  "nav": {
+    "payments": "Payments",
+    "categories": "Categories"
   },
   "months": {
     "1": "January",

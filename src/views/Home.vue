@@ -1,49 +1,55 @@
 <template>
   <v-row
     class="my-6"
-    justify="center"
   >
-    <v-btn
-      v-show="this.$store.state.authToken"
-      color="primary"
-      large
-      class="mb-6"
-      @click="isPaymentDialogShown = true"
-    >
-      <v-icon left>
-        mdi-plus
-      </v-icon>
-      {{ $t('payment.add') }}
-    </v-btn>
+    <v-col>
+      <div class="text-h4 mb-6">
+        {{ $t('nav.payments') }}
+      </div>
 
-    <edit-payment-dialog
-      :is-displayed.sync="isPaymentDialogShown"
-      action-type="add"
-    />
-
-    <v-fade-transition>
-      <v-expansion-panels
-        v-show="Object.keys(yearlyData).length"
-        v-model="expandedMonths"
-        multiple
+      <v-btn
+        v-show="this.$store.state.authToken"
+        color="primary"
+        large
+        class="mb-6"
+        @click="isPaymentDialogShown = true"
       >
-        <month
-          v-for="(monthData, monthKey) of yearlyData.months"
-          :key="monthKey"
-          :monthly-data="{
-            ...monthData,
-            monthNum: monthKey
-          }"
-        />
-      </v-expansion-panels>
-    </v-fade-transition>
+        <v-icon left>
+          mdi-plus
+        </v-icon>
+        {{ $t('payment.add') }}
+      </v-btn>
 
-    <v-skeleton-loader
-      v-show="!Object.keys(yearlyData).length && $store.state.authToken"
-      type="list-item@12"
-      width="100%"
-      elevation="2"
-    />
+      <edit-payment-dialog
+        v-if="isPaymentDialogShown"
+        :is-displayed.sync="isPaymentDialogShown"
+        action-type="add"
+      />
+
+      <v-fade-transition>
+        <v-expansion-panels
+          v-show="Object.keys(yearlyData).length"
+          v-model="expandedMonths"
+          multiple
+        >
+          <month
+            v-for="(monthData, monthKey) of yearlyData.months"
+            :key="monthKey"
+            :monthly-data="{
+              ...monthData,
+              monthNum: monthKey
+            }"
+          />
+        </v-expansion-panels>
+      </v-fade-transition>
+
+      <v-skeleton-loader
+        v-show="!Object.keys(yearlyData).length && $store.state.authToken"
+        type="list-item@12"
+        width="100%"
+        elevation="2"
+      />
+    </v-col>
   </v-row>
 </template>
 

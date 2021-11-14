@@ -18,7 +18,7 @@
           cols="2"
           class="green--text"
         >
-          +{{ monthlyData.incomesSum }}
+          {{ monthlyData.incomesSum ? `+${monthlyData.incomesSum}` : '' }}
         </v-col>
 
         <v-col
@@ -44,21 +44,14 @@
             :sort-desc="true"
             disable-pagination
             hide-default-footer
+            @click:row="editPayment($event)"
           >
-            <template v-slot:[`item.actions`]="{ item }">
+            <template v-slot:[`item.categoryId`]="{ item }">
               <v-icon
                 small
-                class="mr-2"
-                @click="editPayment(item)"
-              >
-                mdi-pencil
-              </v-icon>
-              <v-icon
-                small
-                @click="deletePayment(item)"
-              >
-                mdi-delete
-              </v-icon>
+                :color="getCategoryColor(item.categoryId)"
+                v-text="'mdi-circle'"
+              />
             </template>
           </v-data-table>
         </v-col>
@@ -69,27 +62,21 @@
           </v-subheader>
 
           <v-data-table
+            v-ripple
             :headers="paymentHeaders"
             :items="expenses"
             sort-by="amount"
             :sort-desc="false"
             disable-pagination
             hide-default-footer
+            @click:row="editPayment($event)"
           >
-            <template v-slot:[`item.actions`]="{ item }">
+            <template v-slot:[`item.categoryId`]="{ item }">
               <v-icon
                 small
-                class="mr-2"
-                @click="editPayment(item)"
-              >
-                mdi-pencil
-              </v-icon>
-              <v-icon
-                small
-                @click="deletePayment(item)"
-              >
-                mdi-delete
-              </v-icon>
+                :color="getCategoryColor(item.categoryId)"
+                v-text="'mdi-circle'"
+              />
             </template>
           </v-data-table>
         </v-col>
@@ -127,15 +114,15 @@ export default class Month extends Vue {
 
   private paymentHeaders = [
     {
+      text: '',
+      value: 'categoryId',
+      width: '30px',
+    }, {
       text: this.$t('payment.name'),
       value: 'name',
     }, {
       text: this.$t('payment.amount'),
       value: 'amount',
-    }, {
-      text: this.$t('home.actions'),
-      value: 'actions',
-      sortable: false,
     },
   ];
 
@@ -144,20 +131,24 @@ export default class Month extends Vue {
   private editedPayment = {} as Payment;
 
   get income(): Array<Payment> {
-    return this.monthlyData.payments.filter((e) => e.amount >= 0);
+    return this.monthlyData.payments?.filter((e) => e.amount >= 0);
   }
 
   get expenses(): Array<Payment> {
-    return this.monthlyData.payments.filter((e) => e.amount < 0);
+    return this.monthlyData.payments?.filter((e) => e.amount < 0);
   }
 
-  editPayment(payment: Payment): void {
-    this.editedPayment = payment;
+  getCategoryColor(categoryId: number | null): string {
+    if (!categoryId) {
+      return '';
+    }
+
+    return this.$store.state.categories.get(categoryId).color;
+  }
+
+  editPayment(paymentData: Payment): void {
+    this.editedPayment = paymentData;
     this.isPaymentDialogShown = true;
-  }
-
-  deletePayment(payment: Payment): void {
-    this.$store.dispatch('deletePayment', payment.id);
   }
 }
 </script>

@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 
+import Category from '@/types/Category';
 import Payment from '@/types/Payment';
 import YearlyData from '@/types/YearlyData';
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
   plugins: [createPersistedState({
     paths: [
       'authToken',
+      'userEmail',
     ],
   })],
 
@@ -19,7 +21,10 @@ export default new Vuex.Store({
 
   state: {
     authToken: '',
+    userEmail: '',
     payments: {} as YearlyData,
+    categories: {} as Map<number, Category>,
+    areCategoriesLoaded: false,
   },
 
   mutations: {
@@ -31,6 +36,16 @@ export default new Vuex.Store({
   },
 
   actions: {
+    async getUserData() {
+      const userResponse = await axios.get(
+        'https://five-year-plan.herokuapp.com/users/me',
+      );
+
+      this.commit('updateValue', {
+        userEmail: userResponse.data.email,
+      });
+    },
+
     async getPayments() {
       const paymentsResponse = await axios.get(
         'https://five-year-plan.herokuapp.com/payments/grouped-by-month',
@@ -86,9 +101,76 @@ export default new Vuex.Store({
       );
 
       // TODO: Error display
-      if (deletePaymentResponse.status === 200) {
+      if (deletePaymentResponse.status === 204) {
         // TODO: Local mutate
         this.dispatch('getPayments');
+
+        return true;
+      }
+
+      return false;
+    },
+
+    async getCategories() {
+      const categoriesResponse = await axios.get(
+        'https://five-year-plan.herokuapp.com/categories/',
+      );
+
+      const categoriesMap = new Map(
+        categoriesResponse.data.map((entry: Category) => [entry.id, {
+          ...entry,
+        }]),
+      );
+
+      this.commit('updateValue', {
+        categories: categoriesMap,
+        areCategoriesLoaded: true,
+      });
+    },
+
+    async addCategory(_, categoryData: Category): Promise<boolean> {
+      const addCategoryResponse = await axios.post(
+        'https://five-year-plan.herokuapp.com/categories/',
+        categoryData,
+      );
+
+      // TODO: Error display
+      if (addCategoryResponse.status === 201) {
+        // TODO: Local mutate
+        this.dispatch('getCategories');
+
+        return true;
+      }
+
+      return false;
+    },
+
+    async editCategory(_, categoryData: Category): Promise<boolean> {
+      const editCategoryResponse = await axios.put(
+        `https://five-year-plan.herokuapp.com/categories/${categoryData.id}`,
+        categoryData,
+      );
+
+      // TODO: Error display
+      if (editCategoryResponse.status === 200) {
+        // TODO: Local mutate
+        this.dispatch('getCategories');
+
+        return true;
+      }
+
+      return false;
+    },
+
+    async deleteCategory(_, categoryId: number): Promise<boolean> {
+      const deleteCategoryResponse = await axios.delete(
+        `https://five-year-plan.herokuapp.com/categories/${categoryId}`,
+      );
+
+      // TODO: Error display
+      if (deleteCategoryResponse.status === 204) {
+        // TODO: Local mutate
+        this.dispatch('getCategories');
 
         return true;
       }
