@@ -3,7 +3,7 @@
     class="my-6"
   >
     <v-col>
-      <div class="text-h4 mb-6">
+      <div class="text-h3 mb-6">
         {{ $t('nav.categories') }}
       </div>
 

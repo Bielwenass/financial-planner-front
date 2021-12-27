@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header class="">
+    <v-expansion-panel-header>
       <v-row>
         <v-col cols="2">
           {{ $t(`months.${monthlyData.monthNum}`) }}
@@ -62,7 +62,6 @@
           </v-subheader>
 
           <v-data-table
-            v-ripple
             :headers="paymentHeaders"
             :items="expenses"
             sort-by="amount"

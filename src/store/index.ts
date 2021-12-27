@@ -47,17 +47,39 @@ export default new Vuex.Store({
     },
 
     async getPayments() {
-      const paymentsResponse = await axios.get(
+      const currentYear = new Date().getFullYear();
+
+      const yearsToGet = [
+        currentYear - 1,
+        currentYear,
+        currentYear + 1,
+      ];
+
+      const yearsRequests = yearsToGet.map((year) => axios.get(
         'https://five-year-plan.herokuapp.com/payments/grouped-by-month',
         {
           params: {
-            year: 2021,
+            year,
           },
         },
-      );
+      ));
+
+      let paymentsResponses = await Promise.all(yearsRequests);
+
+      // TODO: Remove clumsy year assign
+      for (let i = 0; i < yearsToGet.length; i += 1) {
+        if (paymentsResponses[i].data) {
+          paymentsResponses[i].data.year = yearsToGet[i];
+        }
+      }
+
+      // Filter out years with null data
+      paymentsResponses = paymentsResponses.filter((e) => e.data);
 
       this.commit('updateValue', {
-        payments: paymentsResponse.data,
+        payments: paymentsResponses.reduce((acc, cur) => ({
+          ...acc, [cur.data.year]: cur.data,
+        }), {}),
       });
     },
 

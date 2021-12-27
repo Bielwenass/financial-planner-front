@@ -3,7 +3,7 @@
     class="my-6"
   >
     <v-col>
-      <div class="text-h4 mb-6">
+      <div class="text-h3 mb-6">
         {{ $t('nav.payments') }}
       </div>
 
@@ -26,25 +26,33 @@
         action-type="add"
       />
 
-      <v-fade-transition>
-        <v-expansion-panels
-          v-show="Object.keys(yearlyData).length"
-          v-model="expandedMonths"
-          multiple
-        >
-          <month
-            v-for="(monthData, monthKey) of yearlyData.months"
-            :key="monthKey"
-            :monthly-data="{
-              ...monthData,
-              monthNum: monthKey
-            }"
-          />
-        </v-expansion-panels>
-      </v-fade-transition>
+      <template v-for="yearData of allYearsData">
+        <div :key="yearData.year">
+          <div class="text-h4 mt-8 mb-4">
+            {{ yearData.year }}
+          </div>
+
+          <v-fade-transition>
+            <v-expansion-panels
+              v-show="Object.keys(allYearsData).length"
+              v-model="expandedMonths[yearData.year]"
+              multiple
+            >
+              <month
+                v-for="(monthData, monthKey) of yearData.months"
+                :key="monthKey"
+                :monthly-data="{
+                  ...monthData,
+                  monthNum: monthKey
+                }"
+              />
+            </v-expansion-panels>
+          </v-fade-transition>
+        </div>
+      </template>
 
       <v-skeleton-loader
-        v-show="!Object.keys(yearlyData).length && $store.state.authToken"
+        v-show="!Object.keys(allYearsData).length && $store.state.authToken"
         type="list-item@12"
         width="100%"
         elevation="2"
@@ -68,17 +76,22 @@ import YearlyData from '@/types/YearlyData';
   },
 })
 export default class Home extends Vue {
-  expandedMonths: Array<number> = [];
+  expandedMonths: Record<string, number[]> = {};
 
   isPaymentDialogShown = false;
 
-  get yearlyData(): YearlyData {
+  get allYearsData(): Record<number, YearlyData> {
     return this.$store.state.payments;
   }
 
-  created(): void {
+  async created(): Promise<void> {
     if (this.$store.state.authToken) {
-      this.$store.dispatch('getPayments');
+      await this.$store.dispatch('getPayments');
+
+      // Add properties to expandedMonths for every year present
+      Object.keys(this.$store.state.payments).forEach((e) => {
+        this.expandedMonths[e] = [];
+      });
     }
   }
 }

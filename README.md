@@ -1,4 +1,5 @@
 # financial-planner-front
+Frontend couterpart of https://github.com/cmrd-a/five-year-plan. Available on https://financial-planner-front.herokuapp.com/.
 
 ## Project setup
 ```
